@@ -28,5 +28,26 @@ async def dado(ctx):
 @bot.command()
 async def info(ctx):
     await ctx.send("Soy un bot de prueba armado con Python y discord.py")
+class MenuView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
 
+    @discord.ui.button(label="Saludo", style=discord.ButtonStyle.primary, emoji="👋")
+    async def saludo_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_message(f"¡Hola {interaction.user.name}! 👋", ephemeral=True)
+
+    @discord.ui.button(label="Tirar dado", style=discord.ButtonStyle.success, emoji="🎲")
+    async def dado_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        import random
+        numero = random.randint(1, 6)
+        await interaction.response.send_message(f"🎲 Salió el número: {numero}", ephemeral=True)
+
+    @discord.ui.button(label="Info del bot", style=discord.ButtonStyle.secondary, emoji="ℹ️")
+    async def info_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_message("Soy un bot de prueba armado con Python y discord.py", ephemeral=True)
+
+@bot.command()
+async def menu(ctx):
+    view = MenuView()
+    await ctx.send("Elegí una opción:", view=view)
 bot.run(TOKEN)
